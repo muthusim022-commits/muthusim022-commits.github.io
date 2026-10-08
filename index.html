@@ -161,7 +161,10 @@ footer{border-top:1px solid var(--line);padding:18px var(--pad);text-align:cente
         My Power BI, Excel and Google Sheets dashboards across multiple client accounts cut reporting delays by 40 percent, which supported faster and better informed decisions.
         I bring that same discipline to every team I join, delivering accurate data, quicker reports and the confidence to act on the results.</p>
       <ul class="skills">
-        <li>Advanced Excel</li><li>PivotTables</li><li>Google Sheets</li><li>Apps Script</li><li>SQL</li><li>PostgreSQL</li><li>Python</li><li>Pandas</li><li>NumPy</li><li>Power BI</li><li>ETL pipelines</li><li>Data cleaning</li>
+        <li>Advanced Excel</li><li>PivotTables</li><li>Google Sheets</li>
+        <li>Apps Script</li><li>SQL</li><li>PostgreSQL</li><li>Python</li>
+        <li>Pandas</li><li>NumPy</li><li>Power BI</li><li>ETL pipelines</li>
+        <li>Data cleaning</li><li>Supabase</li>
       </ul>
     </div>
     <div>
@@ -191,6 +194,7 @@ footer{border-top:1px solid var(--line);padding:18px var(--pad);text-align:cente
       <label>Name <input name="name" required maxlength="80" autocomplete="name"></label>
       <label>Email <input name="email" type="email" required maxlength="120" autocomplete="email"></label>
       <label>Message <textarea name="message" required maxlength="2000"></textarea></label>
+      <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none">
       <button class="btn solid" type="submit">Send message</button>
       <p id="status" role="status"></p>
     </form>
@@ -198,19 +202,22 @@ footer{border-top:1px solid var(--line);padding:18px var(--pad);text-align:cente
 </section>
 </main>
 
-<footer>© <span id="yr"></span> Mathew Musee Muthusi · Theme by Ka_mwa_ki Designs</footer>
+<footer>© <span id="yr"></span> Mathew Musee Muthusi · Theme by Kamwaki Designs</footer>
 
 <script type="module">
 // 1) Paste your Supabase values here (anon/publishable key only, never service_role)
 const SUPABASE_URL = '';
 const SUPABASE_KEY = '';
 
+// 2) Paste your Web3Forms access key here to receive contact messages by email
+const WEB3FORMS_KEY = '1629e97e-d859-4188-b552-61961725c7a5';
+
 // Shown if Supabase isn't set up yet or can't be reached
 const FALLBACK = [
   {title:'E-Commerce Commercial Performance & Revenue Platform', description:'Analytics across 10,000+ customer purchasing profiles. Cleaned messy operational data and built trend models to track revenue and flag processing anomalies.', tools:['Python','Pandas','Data cleaning','Trend analysis'], image_url:'ecommerce.jpg', link_url:'https://ecommercesalesanalytics.vercel.app/', link_label:'View live project'},
   {title:'Automated Operations Dashboard & Compliance Automation System', description:'Live business dashboard in Excel and Google Sheets with a script layer that enforces validation rules, removes manual entry errors and speeds up weekly reporting.', tools:['Excel','Google Sheets','PivotTables','Apps Script'], image_url:'dashboard.jpg', link_url:'https://github.com/muthusim022-commits/Automated-Sales-Dashboard-with-Live-PivotTables-Email-Reporting', link_label:'View on GitHub'},
   {title:'Healthcare Record Integrity & Structural Database Application', description:'Python database framework with strict schema validation that secures backend data and cut manual input errors by an estimated 35%.', tools:['Python','Schema validation','Database management'], image_url:'cookcounty.jpg', link_url:'https://cookcountyhealth.vercel.app/', link_label:'View live project'},
-  {title:'Hotpoint EDA', description:'Exploratory analysis of retail operations data. Work in progress.', tools:['Python','PowerBI', 'SQL'], link_url:'', link_label:'', status:'In progress'}
+  {title:'Hotpoint EDA', description:'Exploratory analysis of retail operations data. Work in progress.', tools:['Python','SQL'], link_url:'', link_label:'', status:'In progress'}
 ];
 const FALLBACK_EXP = [
   {role:'Junior Operations Analyst', company:'Janus Health', period:'June 2023 to May 2026', points:[
@@ -281,16 +288,35 @@ async function loadExperience() {
 loadExperience().catch(() => {});
 
 // ---- Contact form
-const form = document.getElementById(Exploratory analysis of retail operations data. Work in pro'contactForm');
+const form = document.getElementById('contactForm');
 const status = document.getElementById('status');
 form.addEventListener('submit', async e => {
   e.preventDefault();
   const d = Object.fromEntries(new FormData(form));
-  if (!sb) { location.href = `mailto:muthusim022@gmail.com?subject=${encodeURIComponent('Portfolio message from ' + d.name)}&body=${encodeURIComponent(d.message)}`; return; }
+  if (d.botcheck) return; // spam trap
+  if (!WEB3FORMS_KEY && !sb) {
+    location.href = `mailto:muthusim022@gmail.com?subject=${encodeURIComponent('Portfolio message from ' + d.name)}&body=${encodeURIComponent(d.message)}`;
+    return;
+  }
   status.textContent = 'Sending…';
-  const { error } = await sb.from('messages').insert({ name: d.name, email: d.email, message: d.message });
-  status.textContent = error ? 'Could not send. Please email me directly.' : 'Message sent. Thank you!';
-  if (!error) form.reset();
+  let sent = false;
+  if (WEB3FORMS_KEY) {
+    try {
+      const r = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ access_key: WEB3FORMS_KEY, subject: 'Portfolio message from ' + d.name, name: d.name, email: d.email, message: d.message })
+      });
+      const j = await r.json();
+      sent = r.ok && j.success;
+    } catch (err) { console.warn(err); }
+  }
+  if (sb) {
+    const { error } = await sb.from('messages').insert({ name: d.name, email: d.email, message: d.message });
+    sent = sent || !error;
+  }
+  status.textContent = sent ? 'Message sent. Thank you!' : 'Could not send. Please email me directly.';
+  if (sent) form.reset();
 });
 
 
