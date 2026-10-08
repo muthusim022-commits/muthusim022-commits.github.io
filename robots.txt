@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://muthusim022-commits.github.io/sitemap.xml
