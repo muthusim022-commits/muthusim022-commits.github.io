@@ -46,6 +46,7 @@ header nav a:hover{color:var(--ink);background:rgba(255,255,255,.07)}
 
 .about{display:grid;grid-template-columns:1.3fr .7fr;gap:4vw}
 .about p{color:#c3c9d8;max-width:62ch;margin-bottom:12px}
+.about .lead{font:500 1.55rem/1.25 Oswald,sans-serif;color:var(--ink);margin-bottom:16px}
 .skills{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}
 .skills li{padding:4px 13px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-weight:500;font-size:.88rem;transition:border-color .2s}
 .skills li:hover{border-color:var(--orange)}
@@ -92,6 +93,22 @@ button.btn{cursor:pointer;font:700 1rem 'DM Sans';justify-self:start}
 #status{min-height:1.3em;color:var(--mute)}
 footer{border-top:1px solid var(--line);padding:18px var(--pad);text-align:center;color:var(--mute);font-size:.85rem}
 
+/* about + experience side by side */
+.about{grid-template-columns:1.15fr .85fr;gap:34px;align-items:start}
+.about h2{font-size:1.3rem;margin-bottom:12px}
+.about h2::before{height:1.1rem;width:4px}
+.about p{font-size:.9rem;line-height:1.6;max-width:none;margin-bottom:0}
+.about .skills{margin-top:16px;gap:6px}
+.about .skills li{font-size:.78rem;padding:2px 11px}
+.about .jobs{gap:12px;padding-left:22px}
+.about .jobs::before{left:4px}
+.about .job{padding:12px 15px;border-radius:10px}
+.about .job::before{left:-22px;top:17px;width:10px;height:10px;border-width:2px}
+.about .job h3{font-size:1rem}
+.about .job .meta{font-size:.78rem;margin:1px 0 6px}
+.about .job ul{font-size:.84rem;padding-left:16px}
+.about .job li{margin-bottom:3px}
+
 @media (max-width:820px){
  .hero,.about,.contact,#projectList{grid-template-columns:1fr}
  .hero{padding-top:32px;padding-bottom:40px;gap:30px}
@@ -108,7 +125,6 @@ footer{border-top:1px solid var(--line);padding:18px var(--pad);text-align:cente
     <a class="brand" href="#home">Mathew the Analyst</a>
     <nav aria-label="Sections">
       <a href="#about">About</a>
-      <a href="#experience">Experience</a>
       <a href="#projects">Projects</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -129,25 +145,24 @@ footer{border-top:1px solid var(--line);padding:18px var(--pad);text-align:cente
 
 <main>
 <section id="about">
-  <h2>About</h2>
   <div class="about">
     <div>
-      <p>I am a data analyst with four years of experience turning raw, inconsistent records into clear information that teams can rely on. 
-        I work confidently with Python, SQL, Excel, Google Sheets/APPs Script and Power BI, which lets me move from messy source files to finished dashboards without delays. 
-        I build validation checks into every process, so errors are caught early and the numbers reaching decision makers are accurate and consistent. 
-        At Janus Health, I used Python Scripting to cut file checking from three days to under one day, so teams got reliable data sooner. 
-        My Power BI, Excel and Google Sheets dashboards across multiple client accounts cut reporting delays by 40 percent, which supported faster and better informed decisions. 
+      <h2>About</h2>
+      <p>I am a data analyst with four years of experience turning raw, inconsistent records into clear information that teams can rely on.
+        I work confidently with Python, SQL, Excel, Google Sheets/Apps Script and Power BI, which lets me move from messy source files to finished dashboards without delays.
+        I build validation checks into every process, so errors are caught early and the numbers reaching decision makers are accurate and consistent.
+        At Janus Health, I used Python Scripting to cut file checking from three days to under one day, so teams got reliable data sooner.
+        My Power BI, Excel and Google Sheets dashboards across multiple client accounts cut reporting delays by 40 percent, which supported faster and better informed decisions.
         I bring that same discipline to every team I join, delivering accurate data, quicker reports and the confidence to act on the results.</p>
+      <ul class="skills">
+        <li>Advanced Excel</li><li>PivotTables</li><li>Google Sheets</li><li>Apps Script</li><li>SQL</li><li>PostgreSQL</li><li>Python</li><li>Pandas</li><li>NumPy</li><li>Power BI</li><li>ETL pipelines</li><li>Data cleaning</li>
+      </ul>
     </div>
-    <ul class="skills">
-      <li>Advanced Excel</li><li>PivotTables</li><li>Google Sheets</li><li>Apps Script</li><li>SQL</li><li>PostgreSQL</li><li>Python</li><li>Pandas</li><li>NumPy</li><li>Power BI</li><li>ETL pipelines</li><li>Data cleaning</li>
-    </ul>
+    <div>
+      <h2>Experience</h2>
+      <div id="expList" class="jobs"><p class="note">Loading experience…</p></div>
+    </div>
   </div>
-</section>
-
-<section id="experience">
-  <h2>Experience</h2>
-  <div id="expList" class="jobs"><p class="note">Loading experience…</p></div>
 </section>
 
 <section id="projects">
@@ -192,7 +207,7 @@ const FALLBACK = [
   {title:'Hotpoint EDA', description:'Exploratory analysis of retail operations data. Work in progress.', tools:['Python','SQL'], link_url:'', link_label:'', status:'In progress'}
 ];
 const FALLBACK_EXP = [
-  {role:'Junior Operations Analyst', company:'Janus H', period:'June 2023 to May 2026', points:[
+  {role:'Junior Operations Analyst', company:'Janus Health', period:'June 2023 to May 2026', points:[
     'Analysed supplier transaction history across vendor accounts averaging over 1.5M in annual purchasing, and found recurring delays hurting cash flow.',
     'Wrote Python scripts to validate CSV and Excel files, cutting validation turnaround from 3 days to under 24 hours.',
     'Built Power BI dashboards for 8+ client accounts, cutting reporting delays by 40%.',
