@@ -109,6 +109,12 @@ footer{border-top:1px solid var(--line);padding:18px var(--pad);text-align:cente
 .about .job ul{font-size:.84rem;padding-left:16px}
 .about .job li{margin-bottom:3px}
 
+/* project title above screenshot */
+.phead{padding:14px 18px 12px}
+.phead h3{font-size:1.1rem;font-weight:500}
+.shot{border-top:1px solid var(--line)}
+.pbody{padding-top:12px}
+
 @media (max-width:820px){
  .hero,.about,.contact,#projectList{grid-template-columns:1fr}
  .hero{padding-top:32px;padding-bottom:40px;gap:30px}
@@ -244,12 +250,13 @@ async function loadProjects() {
     const body = el('div', 'pbody');
     const h = el('h3', '', p.title);
     if (p.status && okImg(p.image_url)) h.append(el('span', 'badge', p.status));
-    body.append(h, el('p', '', p.description || ''));
+    body.append(el('p', '', p.description || ''));
     const tags = el('div', 'tags');
     (p.tools || []).forEach(t => tags.append(el('span', '', t)));
     body.append(tags);
     if (okLink(p.link_url)) { const a = el('a', 'go', p.link_label || 'View project'); a.href = p.link_url; a.target = '_blank'; a.rel = 'noopener'; body.append(a); }
-    card.append(shot, body);
+    const head = el('div', 'phead'); head.append(h);
+    card.append(head, shot, body);
     return card;
   }));
 }
